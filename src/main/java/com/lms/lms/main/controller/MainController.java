@@ -1,4 +1,4 @@
-package com.lms.lms;
+package com.lms.lms.main.controller;
 
 import com.lms.lms.component.MailComponent;
 import lombok.RequiredArgsConstructor;

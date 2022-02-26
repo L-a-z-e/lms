@@ -55,4 +55,14 @@ public class MemberController {
 
 
     }
+
+    @GetMapping("/member/info")
+    public String memberInfo(){
+        return "member/info";
+    }
+
+    @RequestMapping("/member/login")
+    public String login(){
+        return "member/login";
+    }
 }

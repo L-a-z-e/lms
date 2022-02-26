@@ -2,13 +2,22 @@ package com.lms.lms.member.service.impl;
 
 import com.lms.lms.component.MailComponent;
 import com.lms.lms.member.entity.Member;
+import com.lms.lms.member.exception.MemberEamilAuthException;
 import com.lms.lms.member.model.MemberInput;
 import com.lms.lms.member.repository.MemberRepsitory;
 import com.lms.lms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,16 +37,20 @@ public class MemberServiceImpl implements MemberService {
 
             return false;
         }
+
+        String encryptPassword = BCrypt.hashpw(parameter.getPassword(),BCrypt.gensalt());
         String uuid = UUID.randomUUID().toString();
 
-        Member member = new Member();
-        member.setUserId(parameter.getUserId());
-        member.setUserName(parameter.getUserName());
-        member.setPassword(parameter.getPassword());
-        member.setPhone(parameter.getPhone());
-        member.setRegisterDate(LocalDateTime.now());
-        member.setEmailAuthStatus(false);
-        member.setEmailAuthKey(uuid);
+        Member member = Member.builder()
+                .userId(parameter.getUserId())
+                .userName(parameter.getUserName())
+                .phone(parameter.getPhone())
+                .password(encryptPassword)
+                .registerDate(LocalDateTime.now())
+                .emailAuthStatus(false)
+                .emailAuthKey(uuid)
+                .build();
+
         memberRepsitory.save(member);
 
         String email = parameter.getUserId();
@@ -64,5 +77,24 @@ public class MemberServiceImpl implements MemberService {
 
 
         return true;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        Optional<Member> optionalMember = memberRepsitory.findById(username);
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        if (!member.isEmailAuthStatus()){
+            throw new MemberEamilAuthException("이메일 활성화 이후에 로그인해주세요");
+        }
+
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+
+        return new User(member.getUserId(),member.getPassword(),grantedAuthorities);
     }
 }
