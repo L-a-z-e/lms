@@ -25,16 +25,7 @@ public class MemberController {
 
         System.out.println("requestPost");
 
-
-        String userId = request.getParameter("userId");
-        String userName = request.getParameter("userName");
-        String password = request.getParameter("password");
-        String phone = request.getParameter("phone");
-
-        System.out.println("userId: " + userId);
-        System.out.println("userName: " + userName);
-        System.out.println("password: " + password);
-        System.out.println("phone: " + phone);
+        System.out.println(memberInput.toString());
 
 
 

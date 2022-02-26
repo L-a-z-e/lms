@@ -1,7 +1,9 @@
 package com.lms.lms.member;
 
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 @Data
 public class MemberInput {
 
