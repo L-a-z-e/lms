@@ -18,4 +18,9 @@ public class Member {
     private LocalDateTime registerDate;
 
 
+    private boolean emailAuthStatus;
+    private LocalDateTime emailAuthDt;
+    private String emailAuthKey;
+
+
 }

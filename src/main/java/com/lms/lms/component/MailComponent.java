@@ -15,6 +15,7 @@ public class MailComponent {
 
     private final JavaMailSender javaMailSender;
 
+    /*
     public  void sendMailTest(){
 
         SimpleMailMessage msg = new SimpleMailMessage();
@@ -26,6 +27,8 @@ public class MailComponent {
 
 
     }
+
+     */
 
     public  boolean sendMail(String mail, String subject, String text){
 
