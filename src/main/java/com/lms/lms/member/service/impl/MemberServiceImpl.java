@@ -63,6 +63,6 @@ public class MemberServiceImpl implements MemberService {
         memberRepsitory.save(member);
 
 
-        return false;
+        return true;
     }
 }
