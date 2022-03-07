@@ -2,8 +2,9 @@ package com.lms.lms.member.service.impl;
 
 import com.lms.lms.component.MailComponent;
 import com.lms.lms.member.entity.Member;
-import com.lms.lms.member.exception.MemberEamilAuthException;
+import com.lms.lms.member.exception.MemberEmailAuthException;
 import com.lms.lms.member.model.MemberInput;
+import com.lms.lms.member.model.ResetPasswordInput;
 import com.lms.lms.member.repository.MemberRepsitory;
 import com.lms.lms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +89,7 @@ public class MemberServiceImpl implements MemberService {
         }
         Member member = optionalMember.get();
         if (!member.isEmailAuthStatus()){
-            throw new MemberEamilAuthException("이메일 활성화 이후에 로그인해주세요");
+            throw new MemberEmailAuthException("이메일 활성화 이후에 로그인해주세요");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -96,5 +97,68 @@ public class MemberServiceImpl implements MemberService {
 
 
         return new User(member.getUserId(),member.getPassword(),grantedAuthorities);
+    }
+
+    @Override
+    public boolean sendResetPassword(ResetPasswordInput parameter) {
+        Optional<Member> optionalMember = memberRepsitory.findByUserIdAndUserName(parameter.getUserId(), parameter.getUserName());
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        String uuid = UUID.randomUUID().toString();
+        member.setResetPasswordKey(uuid);
+        member.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+        memberRepsitory.save(member);
+
+        String email = parameter.getUserId();
+        String subject = "[LMS] 비밀번호 초기화 메일";
+        String text ="<p>LMS 비밀번호 초기화 메일입니다.</p><p>아래 링크를 클릭하셔서 비밀번호를 초기화 해주세요.</p>"
+                + "<div><a href='http://localhost:8080/member/reset/password?id=" + uuid + "'> 비밀번호 초기화 링크 </a></div>";
+        mailComponent.sendMail(email,subject,text);
+        System.out.println(mailComponent);
+
+        return true;
+    }
+
+    @Override
+    public boolean resetPassword(String uuid, String password) {
+        Optional<Member> optionalMember = memberRepsitory.findByResetPasswordKey(uuid);
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        if(member.getResetPasswordLimitDt()==null){
+            throw new RuntimeException("유효한 날짜가 아닙니다.");
+        }
+       if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+           throw new RuntimeException("유효한 날짜가 아닙니다.");
+       }
+
+        String encPassword = BCrypt.hashpw(password,BCrypt.gensalt());
+        member.setPassword(encPassword);
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        memberRepsitory.save(member);
+
+        return true;
+    }
+
+    @Override
+    public boolean checkResetPassword(String uuid) {
+        Optional<Member> optionalMember = memberRepsitory.findByResetPasswordKey(uuid);
+        if (!optionalMember.isPresent()) {
+           return false;
+        }
+        Member member = optionalMember.get();
+        if(member.getResetPasswordLimitDt()==null){
+            throw new RuntimeException("유효한 날짜가 아닙니다.");
+        }
+        if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("유효한 날짜가 아닙니다.");
+        }
+
+        return true;
+
     }
 }
