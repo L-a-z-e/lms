@@ -1,4 +1,4 @@
-package com.lms.lms.admin;
+package com.lms.lms.admin.controller;
 
 
 import org.springframework.stereotype.Controller;

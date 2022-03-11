@@ -6,6 +6,7 @@ import com.lms.lms.admin.model.MemberParam;
 import com.lms.lms.component.MailComponent;
 import com.lms.lms.member.entity.Member;
 import com.lms.lms.member.exception.MemberEmailAuthException;
+import com.lms.lms.member.exception.MemberStopException;
 import com.lms.lms.member.model.MemberInput;
 import com.lms.lms.member.model.ResetPasswordInput;
 import com.lms.lms.member.repository.MemberRepsitory;
@@ -55,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
                 .registerDate(LocalDateTime.now())
                 .emailAuthStatus(false)
                 .emailAuthKey(uuid)
+                .userStatus(Member.MEMBER_STATUS_REQ)
                 .build();
 
         memberRepsitory.save(member);
@@ -82,6 +84,7 @@ public class MemberServiceImpl implements MemberService {
         if(member.isEmailAuthStatus()){
             return false;
         }
+        member.setUserStatus(Member.MEMBER_STATUS_ING);
         member.setEmailAuthStatus(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepsitory.save(member);
@@ -98,8 +101,11 @@ public class MemberServiceImpl implements MemberService {
             throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
         }
         Member member = optionalMember.get();
-        if (!member.isEmailAuthStatus()){
+        if (Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())){
             throw new MemberEmailAuthException("이메일 활성화 이후에 로그인해주세요");
+        }
+        if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
+            throw new MemberStopException("정지된 회원입니다.");
         }
 
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
@@ -203,5 +209,32 @@ public class MemberServiceImpl implements MemberService {
 
 
         return memberDto;
+    }
+
+    @Override
+    public boolean updateStatus(String userId, String userStatus) {
+        Optional<Member> optionalMember = memberRepsitory.findById(userId);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        member.setUserStatus(userStatus);
+        memberRepsitory.save(member);
+
+        return true;
+    }
+
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        Optional<Member> optionalMember = memberRepsitory.findById(userId);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원 정보가 존재하지 않습니다.");
+        }
+        Member member = optionalMember.get();
+        String encPassword = BCrypt.hashpw(password,BCrypt.gensalt());
+        member.setPassword(encPassword);
+        memberRepsitory.save(member);
+
+        return true;
     }
 }

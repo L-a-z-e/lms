@@ -1,13 +1,16 @@
-package com.lms.lms.admin;
+package com.lms.lms.admin.controller;
 
 import com.lms.lms.admin.dto.MemberDto;
+import com.lms.lms.admin.model.MemberInputAdmin;
 import com.lms.lms.admin.model.MemberParam;
+import com.lms.lms.member.model.MemberInput;
 import com.lms.lms.member.service.MemberService;
 import com.lms.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -47,4 +50,22 @@ public class AdminMemberController {
 
         return "admin/member/detail";
     }
+
+    @PostMapping("/admin/member/status")
+    public String status(Model model, MemberInputAdmin parameter){
+
+       boolean result = memberService.updateStatus(parameter.getUserId(),parameter.getUserStatus());
+
+       return "redirect:/admin/member/detail?userId=" +parameter.getUserId();
+    }
+
+    @PostMapping("/admin/member/password")
+    public String password(Model model, MemberInputAdmin parameter){
+
+        boolean result = memberService.updatePassword(parameter.getUserId(),parameter.getPassword());
+
+        return "redirect:/admin/member/detail?userId=" +parameter.getUserId();
+    }
+
+
 }

@@ -49,4 +49,20 @@ public interface MemberService extends UserDetailsService {
      * @return
      */
     MemberDto detail(String userId);
+
+    /**
+     * 회원 상태 변경
+     * @param userId
+     * @param userStatus
+     * @return
+     */
+    boolean updateStatus(String userId, String userStatus);
+
+    /**
+     * 회원 비밀번호 초기화
+     * @param userId
+     * @param password
+     * @return
+     */
+    boolean updatePassword(String userId, String password);
 }

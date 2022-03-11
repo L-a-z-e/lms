@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 @Entity
-public class Member {
+public class Member implements MemberCode {
     @Id
     private String userId;
     private String userName;
@@ -32,6 +32,7 @@ public class Member {
     private LocalDateTime resetPasswordLimitDt;
 
     private boolean adminYn;
+    private String userStatus;
 
 
 }
