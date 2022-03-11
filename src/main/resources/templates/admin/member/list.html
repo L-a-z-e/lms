@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+
+</head>
+<body>
+
+   <h1>회원 관리 화면</h1>
+
+    <div>
+        <a href="/admin/main"> 관리자 메인 </a>
+
+        <a href="/admin/member/list"> 회원관리 </a>
+
+        <a href="/admin/member/list"> 카테고리 관리 </a>
+
+        <a href="/admin/member/list"> 강의 관리 </a>
+
+        <a href="/member/logout"> 로그아웃 </a>
+    </div>
+
+
+    <div class="list">
+        <table>
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>아이디(이메일)</th>
+                    <th>연락처</th>
+                    <th>이메일 인증여부</th>
+                    <th>가입일</th>
+                    <th>관리자 여부</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</body>
+</html>

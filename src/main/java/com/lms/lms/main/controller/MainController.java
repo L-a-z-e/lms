@@ -28,5 +28,11 @@ public class MainController {
 
     }
 
+    @RequestMapping("/error/denied")
+    public String errorDenied(){
+
+        return "error/denied";
+    }
+
 
 }
