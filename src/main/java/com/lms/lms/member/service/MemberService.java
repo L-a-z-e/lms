@@ -42,4 +42,11 @@ public interface MemberService extends UserDetailsService {
      * @return
      */
     List<MemberDto> list(MemberParam parameter);
+
+    /**
+     * 회원 상세정보
+     * @param userId
+     * @return
+     */
+    MemberDto detail(String userId);
 }

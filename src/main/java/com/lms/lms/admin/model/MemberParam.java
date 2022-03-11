@@ -9,6 +9,7 @@ public class MemberParam {
     long totalCount;
     String searchType;
     String searchValue;
+    String userId;
 
     public long getpageStart(){
         init();

@@ -83,7 +83,7 @@
             <tbody>
             <tr th:each="member : ${list}">
             <td th:text="${member.seq}">no</td>
-            <td th:text="${member.userId}" th:href="${'detail?id='+member.userId}">id</td>
+            <td> <a th:text="${member.userId}" th:href="${'detail?userId='+member.userId}">id</a></td>
             <td th:text="${member.phone}">tel</td>
             <td>
                 <p th:if="${member.emailAuthStatus}">Y</p>
