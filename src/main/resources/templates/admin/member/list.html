@@ -3,7 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
 
+    </style>
 </head>
 <body>
 
@@ -21,6 +30,7 @@
         <a href="/member/logout"> 로그아웃 </a>
     </div>
 
+   <br>
 
     <div class="list">
         <table>
@@ -34,6 +44,24 @@
                     <th>관리자 여부</th>
                 </tr>
             </thead>
+            <tbody>
+            <tr th:each="member : ${list}">
+            <td>no</td>
+            <td th:text="${member.userId}">id</td>
+            <td th:text="${member.phone}">tel</td>
+            <td>
+                <p th:if="${member.emailAuthStatus}">Y</p>
+                <p th:if="${member.emailAuthStatus eq false}">N</p>
+            </td>
+            <td th:text="${member.registerDate}">regdt</td>
+                <td>
+                    <p th:if="${member.adminYn}">Y</p>
+                    <p th:if="${member.adminYn eq false}">N</p>
+                </td>
+            </tr>
+            </tbody>
+
+
         </table>
     </div>
 </body>
