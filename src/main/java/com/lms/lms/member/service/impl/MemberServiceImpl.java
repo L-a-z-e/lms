@@ -1,5 +1,7 @@
 package com.lms.lms.member.service.impl;
 
+import com.lms.lms.admin.dto.MemberDto;
+import com.lms.lms.admin.mapper.MemberMapper;
 import com.lms.lms.component.MailComponent;
 import com.lms.lms.member.entity.Member;
 import com.lms.lms.member.exception.MemberEmailAuthException;
@@ -28,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberRepsitory memberRepsitory;
     private final MailComponent mailComponent;
+    private final MemberMapper memberMapper;
 
     @Override
     public boolean register(MemberInput parameter) {
@@ -170,9 +173,13 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> list() {
+    public List<MemberDto> list() {
 
-        return memberRepsitory.findAll();
+        MemberDto parameter = new MemberDto();
+        List<MemberDto> list = memberMapper.selectList(parameter);
+
+        return list;
+        //return memberRepsitory.findAll();
 
     }
 }

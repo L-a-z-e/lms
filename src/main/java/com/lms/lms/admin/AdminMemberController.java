@@ -1,5 +1,6 @@
 package com.lms.lms.admin;
 
+import com.lms.lms.admin.dto.MemberDto;
 import com.lms.lms.member.entity.Member;
 import com.lms.lms.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AdminMemberController {
 
     @GetMapping("/admin/member/list")
     public String list(Model model) {
-        List<Member> members = memberService.list();
+        List<MemberDto> members = memberService.list();
         model.addAttribute("list",members);
 
         return "admin/member/list";
