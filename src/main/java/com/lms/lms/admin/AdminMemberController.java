@@ -24,16 +24,17 @@ public class AdminMemberController {
         List<MemberDto> members = memberService.list(parameter);
 
 
-        long totalCount = 0;
+        long totalCount=0;
         if (members != null && members.size()>0){
-            totalCount=members.get(0).getTotalCount();
+            totalCount = members.get(0).getTotalCount();
         }
         String queryString = parameter.getQueryString();
 
         PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize() ,parameter.getPageIndex(), queryString);
-        model.addAttribute("list",members);
-        model.addAttribute("totalCount",totalCount);
-        model.addAttribute("pager",pageUtil.paper());
+        model.addAttribute("list", members);
+        model.addAttribute("totalCount", totalCount);
+        System.out.println(model.getAttribute("totalCount"));
+        model.addAttribute("pager", pageUtil.pager());
         return "admin/member/list";
 
     }

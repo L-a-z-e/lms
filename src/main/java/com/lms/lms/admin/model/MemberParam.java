@@ -6,6 +6,7 @@ import lombok.Data;
 public class MemberParam {
     long pageIndex;
     long pageSize;
+    long totalCount;
     String searchType;
     String searchValue;
 
@@ -20,14 +21,6 @@ public class MemberParam {
 
     }
 
-    public void init(){
-        if(pageIndex<1){
-            pageIndex=1;
-        }
-        if(pageSize<10){
-            pageSize=10;
-        }
-    }
 
     public String getQueryString() {
         init();
@@ -46,5 +39,13 @@ public class MemberParam {
         }
 
         return sb.toString();
+    }
+    public void init() {
+        if (pageIndex < 1) {
+            pageIndex = 1;
+        }
+        if (pageSize < 10) {
+            pageSize = 10;
+        }
     }
 }

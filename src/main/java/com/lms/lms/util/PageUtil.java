@@ -26,7 +26,7 @@ public class PageUtil {
         this.pageIndex = pageIndex;
     }
 
-    public String paper() {
+    public String pager() {
         init();
         StringBuilder sb = new StringBuilder();
 
