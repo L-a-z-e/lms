@@ -3,6 +3,15 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lms.lms.admin.mapper.MemberMapper">
+
+    <select id="selectListCount"
+            parameterType="com.lms.lms.admin.model.MemberParam"
+            resultType="long">
+            select count(*)
+from member
+where 1=1
+    </select>
+
     <select id="selectList"
             parameterType="com.lms.lms.admin.model.MemberParam"
             resultType="com.lms.lms.admin.dto.MemberDto">
@@ -31,5 +40,7 @@
             </otherwise>
         </choose>
         </if>
+        limit #{pageStart},#{pageEnd}
+
     </select>
 </mapper>

@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -176,9 +177,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public List<MemberDto> list(MemberParam parameter) {
 
-
+        long totalCount = memberMapper.selectListCount(parameter);
         List<MemberDto> list = memberMapper.selectList(parameter);
-
+        if(!CollectionUtils.isEmpty(list)){
+            int i = 0;
+            for(MemberDto x : list){
+                x.setTotalCount((totalCount));
+                x.setSeq(totalCount - parameter.getpageStart() - i);
+                i++;
+            }
+        }
         return list;
         //return memberRepsitory.findAll();
 
