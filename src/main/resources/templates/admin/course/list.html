@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+        .pager{
+            margin-top: 10px;
+            text-align: center;
+        }
+        .pager a.on{
+            font-weight: bold;
+            color: red;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+   <h1>회원 관리 화면</h1>
+    <div th:replace="/fragments/layout.html :: fragement-admin-body-menu"></div>
+
+    <hr>
+    <br>
+
+
+<div>
+    <a href="/admin/course/add">강의 등록</a>
+</div>
+    <div class="list">
+
+
+        <table>
+            <thead>
+                <tr>
+                    <th>no</th>
+                    <th>Subject</th>
+                    <th>regDt</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr th:each="course : ${list}">
+                <td th:text="${course.seq}">no</td>
+                <td th:text="${course.subject}"subject></td>
+                <td th:text="${course.regDt}">regDt</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+   <div class="pager" th:utext="${pager}"></div>
+
+</body>
+</html>

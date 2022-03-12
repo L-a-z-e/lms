@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .detail table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .detail table th, .detail table td {
+            border: solid 1px #000;
+        }
+        .buttons {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+
+    </style>
+
+</head>
+<body>
+
+   <h1>강의 관리 - 강의 등록</h1>
+    <div th:replace="/fragments/layout.html :: fragement-admin-body-menu"></div>
+
+    <hr>
+    <br>
+
+
+<div>
+
+</div>
+    <div class="detail">
+
+    <form method="post">
+        <table>
+            <tbody>
+                <tr>
+                    <th>강좌명:</th>
+                    <td>
+                        <input type="text" name="subject" required placeholder="강의명을 입력하세요"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<div class="buttons">
+    <button type="submit">강의 등록하기</button>
+    <a href="/admin/course/list">목록으로 돌아가기</a>
+</div>
+   </form>
+
+
+</body>
+</html>

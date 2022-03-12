@@ -3,12 +3,14 @@ package com.lms.lms.admin.controller;
 import com.lms.lms.admin.dto.MemberDto;
 import com.lms.lms.admin.model.MemberInputAdmin;
 import com.lms.lms.admin.model.MemberParam;
+import com.lms.lms.course.controller.BaseController;
 import com.lms.lms.member.model.MemberInput;
 import com.lms.lms.member.service.MemberService;
 import com.lms.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -17,7 +19,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
-public class AdminMemberController {
+public class AdminMemberController extends BaseController {
 
     private final MemberService memberService;
 
@@ -28,16 +30,15 @@ public class AdminMemberController {
 
 
         long totalCount=0;
-        if (members != null && members.size()>0){
+        if(!CollectionUtils.isEmpty(members)) {
             totalCount = members.get(0).getTotalCount();
         }
         String queryString = parameter.getQueryString();
+        String pagerHtml = getPagerHtml(totalCount, parameter.getPageSize(), parameter.getPageIndex(), queryString);
 
-        PageUtil pageUtil = new PageUtil(totalCount, parameter.getPageSize() ,parameter.getPageIndex(), queryString);
         model.addAttribute("list", members);
         model.addAttribute("totalCount", totalCount);
-        System.out.println(model.getAttribute("totalCount"));
-        model.addAttribute("pager", pageUtil.pager());
+        model.addAttribute("pager", pagerHtml);
         return "admin/member/list";
 
     }
