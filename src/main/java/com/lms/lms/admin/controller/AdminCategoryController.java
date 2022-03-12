@@ -33,4 +33,18 @@ public class AdminCategoryController {
 
         return "redirect:/admin/category/list";
     }
+
+    @PostMapping("/admin/category/delete")
+    public String delete(Model model, CategoryInput parameter){
+
+        boolean result = categoryService.delete(parameter.getId());
+        return "redirect:/admin/category/list";
+    }
+
+    @PostMapping("/admin/category/update")
+    public String update(Model model, CategoryInput parameter){
+
+        boolean result = categoryService.update(parameter);
+        return "redirect:/admin/category/list";
+    }
 }
