@@ -19,10 +19,55 @@
             font-weight: bold;
             color: red;
         }
+        .list .buttons{
+            padding: 10px;
+            position: relative;
+
+        }
+        .total-count{
+            position: absolute;
+            top:120px;
+            right: 0;
+        }
 
 
     </style>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous">
 
+    </script>
+    <script>
+        $(document).ready(function (){
+            $('#selectAll').on('click',function (){
+                var checked = $(this).is(':checked');
+                $('#dataList input[type=checkbox]').each(function (k,v){
+                    $(this).prop('checked',checked);
+                });
+            })
+            $('#deleteButton').on('click',function (){
+
+              var $checked =  $('#dataList input[type=checkbox]:checked');
+              if($checked.length < 1){
+                  alert('삭제할 데이터를 선택해주세요');
+                  return false;
+              }
+              if(!confirm('선택한 삭제하시겠습니까?')){
+                  return false;
+              }
+              var idList = [];
+              $.each($checked, function (k,v){
+                  idList.push($(this).val());
+
+              });
+              var $deleteForm = $('form[name=deleteForm]');
+              $deleteForm.find('input[name=idList]').val(idList.join(','));
+              $deleteForm.submit();
+
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -33,22 +78,30 @@
     <br>
 
 
-<div>
-    <a href="/admin/course/add">강의 등록</a>
-</div>
-    <div class="list">
 
+    <div class="list">
+        <p class="total-count"><span th:text="${totalCount}"></span>개</p>
+        <div class="buttons">
+            <a href="/admin/course/add">강의 등록</a>
+            <button id="deleteButton" type="button">선택 삭제</button>
+        </div>
 
         <table>
             <thead>
                 <tr>
+                    <th>
+                        <input id="selectAll" type="checkbox">
+                    </th>
                     <th>no</th>
                     <th>Subject</th>
                     <th>regDt</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="dataList">
             <tr th:each="course : ${list}">
+                <td>
+                    <input type="checkbox" th:value="${course.id}">
+                </td>
                 <td th:text="${course.seq}">no</td>
                 <td>
                     <p>
@@ -61,6 +114,10 @@
         </table>
     </div>
    <div class="pager" th:utext="${pager}"></div>
+
+   <form name="deleteForm" method="post" action="/admin/course/delete">
+       <input type="hidden" name="idList" >
+   </form>
 
 </body>
 </html>
