@@ -50,7 +50,11 @@
             <tbody>
             <tr th:each="course : ${list}">
                 <td th:text="${course.seq}">no</td>
-                <td th:text="${course.subject}"subject></td>
+                <td>
+                    <p>
+                        <a th:href="'/admin/course/edit?id=' + ${course.id}" th:text="${course.subject}">강좌명</a>
+                    </p>
+                </td>
                 <td th:text="${course.regDt}">regDt</td>
             </tr>
             </tbody>

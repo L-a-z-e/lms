@@ -29,29 +29,44 @@
     <br>
 
 
-<div>
 
-</div>
     <div class="detail">
 
     <form method="post">
         <table>
             <tbody>
                 <tr>
+                    <th>강좌 카테고리</th>
+                    <td>
+                        <select name="categoryId" required>
+                            <option value="">카테고리 선택</option>
+                            <option th:each="categories : ${category}" th:value="${categories.id}" th:text="${categories.categoryName}">CategoryName</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+
                     <th>강좌명:</th>
                     <td>
-                        <input type="text" name="subject" required placeholder="강의명을 입력하세요"/>
+                        <input th:value="${detail.subject}" type="text" name="subject" required placeholder="강의명을 입력하세요"/>
                     </td>
                 </tr>
             </tbody>
         </table>
-    </div>
+
+
+
 
 <div class="buttons">
-    <button type="submit">강의 등록하기</button>
+    <button th:if="${editMode}" type="submit">강의 수정하기</button>
+    <button th:if="${editMode} eq false"type="submit">강의 등록하기</button>
     <a href="/admin/course/list">목록으로 돌아가기</a>
+
 </div>
-   </form>
+    </form>
+</div>
+
+
 
 
 </body>

@@ -1,11 +1,10 @@
 package com.lms.lms.course.controller;
 
-import com.lms.lms.admin.dto.MemberDto;
+import com.lms.lms.admin.service.CategoryService;
 import com.lms.lms.course.dto.CourseDto;
 import com.lms.lms.course.model.CourseInput;
 import com.lms.lms.course.model.CourseParam;
 import com.lms.lms.course.service.CourseService;
-import com.lms.lms.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,6 +20,7 @@ import java.util.List;
 public class AdminCourseController extends BaseController{
 
     private final CourseService courseService;
+    private final CategoryService categoryService;
 
 
     @GetMapping("/admin/course/list")
@@ -42,18 +43,50 @@ public class AdminCourseController extends BaseController{
         return "admin/course/list";
     }
 
-    @GetMapping("/admin/course/add")
-    public String add(Model model){
+    @GetMapping(value = {"/admin/course/add","/admin/course/edit"})
+    public String add(Model model, HttpServletRequest request, CourseInput parameter){
+        model.addAttribute("category",categoryService.list());
+
+
+        boolean editMode = request.getRequestURI().contains("/edit");
+        CourseDto detail = new CourseDto();
+
+
+        if(editMode){
+            long id = parameter.getId();
+            CourseDto existCourse = courseService.getById(id);
+            if(existCourse == null){
+                //error처리
+                model.addAttribute("message","강좌정보가 존재하지 않습니다.");
+                return "common/error";
+            }
+            detail = existCourse;
+
+        }
+        model.addAttribute("detail",detail);
+        model.addAttribute("editMode",editMode);
 
         return "admin/course/add";
     }
 
-    @PostMapping("/admin/course/add")
-    public String addSubmit(Model model, CourseInput parameter){
-        boolean result = courseService.add(parameter);
+    @PostMapping(value = {"/admin/course/add","/admin/course/edit"})
+    public String addSubmit(Model model,HttpServletRequest
+            request,CourseInput parameter) {
+        boolean editMode = request.getRequestURI().contains("/edit");
 
-
-        return "redirect:/admin/course/list";
+        if (editMode) {
+            long id = parameter.getId();
+            CourseDto existCourse = courseService.getById(id);
+            if (existCourse == null) {
+                //error처리
+                model.addAttribute("message", "강좌정보가 존재하지 않습니다.");
+                return "common/error";
+            }
+            boolean result = courseService.set(parameter);
+        }else{
+            boolean result = courseService.add(parameter);
+        }
+            return "redirect:/admin/course/list";
+        }
     }
 
-}
