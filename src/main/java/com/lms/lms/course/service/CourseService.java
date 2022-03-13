@@ -32,4 +32,9 @@ public interface CourseService {
      * @return
      */
     boolean del(String idList);
+
+    /**
+     * 프론트 강좌 목록
+     */
+    List<CourseDto> frontList(CourseParam parameter);
 }
