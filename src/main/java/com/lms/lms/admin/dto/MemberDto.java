@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,5 +51,10 @@ public class MemberDto {
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
                 .build();
+    }
+    public String getRegDtText(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
+        return registerDate != null ? registerDate.format(formatter) : "";
+
     }
 }
