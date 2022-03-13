@@ -1,5 +1,6 @@
 package com.lms.lms.course.service;
 
+import com.lms.lms.admin.model.ServiceResult;
 import com.lms.lms.course.dto.CourseDto;
 import com.lms.lms.course.model.CourseInput;
 import com.lms.lms.course.model.CourseParam;
@@ -50,5 +51,5 @@ public interface CourseService {
      * @param parameter
      * @return
      */
-    boolean req(TakeCourseInput parameter);
+    ServiceResult req(TakeCourseInput parameter);
 }

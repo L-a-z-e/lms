@@ -25,6 +25,12 @@
                     axios.post(url, parameter).then(function (response){
                             console.log(response);
 
+                            var msg = response.data ||'';
+
+                            if (msg != ''){
+                                alert(msg);
+                            }
+
                     }).catch(function (err){
                         console.log(err);
                     });

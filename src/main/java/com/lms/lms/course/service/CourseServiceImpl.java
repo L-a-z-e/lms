@@ -1,6 +1,7 @@
 package com.lms.lms.course.service;
 
 import com.lms.lms.admin.dto.MemberDto;
+import com.lms.lms.admin.model.ServiceResult;
 import com.lms.lms.course.dto.CourseDto;
 import com.lms.lms.course.entity.Course;
 import com.lms.lms.course.entity.TakeCourse;
@@ -126,18 +127,24 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public boolean req(TakeCourseInput parameter) {
+    public ServiceResult req(TakeCourseInput parameter) {
+        ServiceResult result = new ServiceResult();
 
         Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
         if (!optionalCourse.isPresent()){
-            return false;
+            result.setResult(false);
+            result.setMessage("강좌정보가 존재하지 않습니다.");
+            return result;
         }
         Course course = optionalCourse.get();
         //이미 신청정보가 있는지 확인
         String[] statusList = {TakeCourse.STATUS_REQ,TakeCourse.STATUS_COMPLETE};
         long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(), parameter.getUserId(), Arrays.asList(statusList));
         if(count > 0){
-            return false;
+            result.setResult(false);
+            result.setMessage("이미 신청한 강좌 정보가 존재합니다.");
+            return result;
+
         }
         TakeCourse takeCourse = TakeCourse.builder()
                 .courseId(course.getId())
@@ -147,7 +154,10 @@ public class CourseServiceImpl implements CourseService {
                 .status(TakeCourse.STATUS_REQ)
                 .build();
         takeCourseRepository.save(takeCourse);
-        return true;
+
+        result.setResult(true);
+        result.setMessage("");
+        return result;
     }
 
     @Override
