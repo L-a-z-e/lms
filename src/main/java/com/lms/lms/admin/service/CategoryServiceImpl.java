@@ -2,6 +2,7 @@ package com.lms.lms.admin.service;
 
 import com.lms.lms.admin.dto.CategoryDto;
 import com.lms.lms.admin.entity.Category;
+import com.lms.lms.admin.mapper.CategoryMapper;
 import com.lms.lms.admin.model.CategoryInput;
 import com.lms.lms.admin.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
+
     private Sort getSortBySortValueDesc(){
         return Sort.by(Sort.Direction.DESC,"sortValue");
     }
@@ -56,6 +59,13 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.deleteById(id);
 
         return true;
+    }
+
+    @Override
+    public List<CategoryDto> frontList(CategoryDto parameter) {
+
+        return categoryMapper.select(parameter);
+
     }
 
 }
