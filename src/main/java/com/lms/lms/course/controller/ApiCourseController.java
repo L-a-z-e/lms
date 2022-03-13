@@ -2,6 +2,7 @@ package com.lms.lms.course.controller;
 
 import com.lms.lms.admin.model.ServiceResult;
 import com.lms.lms.admin.service.CategoryService;
+import com.lms.lms.common.model.ResponseResult;
 import com.lms.lms.course.model.TakeCourseInput;
 import com.lms.lms.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,12 @@ public class ApiCourseController extends BaseController{
        parameter.setUserId(principal.getName());
        ServiceResult result = courseService.req(parameter);
        if(!result.isResult()){
-           return ResponseEntity.ok().body(result.getMessage());
+           ResponseResult responseResult = new ResponseResult(false, result.getMessage());
+
+           return ResponseEntity.ok().body(responseResult);
        }
-        return ResponseEntity.ok().body(parameter);
+        ResponseResult responseResult = new ResponseResult(true);
+        return ResponseEntity.ok().body(responseResult);
 
 
     }
