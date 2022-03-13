@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 화면</title>
+    <style>
+        .list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .list table th, .list table td {
+            border: solid 1px #000;
+        }
+        .pager{
+            margin-top: 10px;
+            text-align: center;
+        }
+        .pager a.on{
+            font-weight: bold;
+            color: red;
+        }
+        .list .buttons{
+            padding: 10px;
+            position: relative;
+
+        }
+        .total-count{
+            text-align: right;
+        }
+
+
+    </style>
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous">
+
+    </script>
+    <script>
+        $(document).ready(function (){
+            $('#selectAll').on('click',function (){
+                var checked = $(this).is(':checked');
+                $('#dataList input[type=checkbox]').each(function (k,v){
+                    $(this).prop('checked',checked);
+                });
+            })
+            $('#deleteButton').on('click',function (){
+
+              var $checked =  $('#dataList input[type=checkbox]:checked');
+              if($checked.length < 1){
+                  alert('삭제할 데이터를 선택해주세요');
+                  return false;
+              }
+              if(!confirm('선택한 삭제하시겠습니까?')){
+                  return false;
+              }
+              var idList = [];
+              $.each($checked, function (k,v){
+                  idList.push($(this).val());
+
+              });
+              var $deleteForm = $('form[name=deleteForm]');
+              $deleteForm.find('input[name=idList]').val(idList.join(','));
+              $deleteForm.submit();
+
+            });
+        });
+    </script>
+</head>
+<body>
+
+   <h1>수강 관리</h1>
+    <div th:replace="/fragments/layout.html :: fragement-admin-body-menu"></div>
+
+    <hr>
+    <br>
+
+
+    <div class="list">
+        <p class="total-count"><span th:text="${totalCount}"></span>개</p>
+
+
+        <table>
+            <thead>
+                <tr>
+
+                    <th>no</th>
+                    <th>등록일</th>
+                    <th>강좌명</th>
+                    <th colspan="3">신청인</th>
+                    <th>상태</th>
+
+                </tr>
+            </thead>
+            <tbody id="dataList">
+            <tr th:each="course : ${list}">
+                <td th:text="${course.seq}">no</td>
+                <td>
+                    <p th:text="${course.subject}">강좌명
+                    </p>
+                </td>
+                <td th:text="${course.regDt}">regDt</td>
+                <td th:text="${course.userId}">신청인</td>
+                <td th:text="${course.userName}">신청인</td>
+                <td th:text="${course.phone}">신청인</td>
+                <td>
+                    <p th:if="${course.status eq 'REQ'}">수강신청</p>
+                    <p th:if="${course.status eq 'COMPLETE'}">결제완료</p>
+                    <p th:if="${course.status eq 'CANCLE'}">수강취소<p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+   <div class="pager" th:utext="${pager}"></div>
+
+   <form name="deleteForm" method="post" action="/admin/course/delete">
+       <input type="hidden" name="idList" >
+   </form>
+
+</body>
+</html>
