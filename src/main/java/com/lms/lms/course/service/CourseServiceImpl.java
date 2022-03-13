@@ -3,10 +3,13 @@ package com.lms.lms.course.service;
 import com.lms.lms.admin.dto.MemberDto;
 import com.lms.lms.course.dto.CourseDto;
 import com.lms.lms.course.entity.Course;
+import com.lms.lms.course.entity.TakeCourse;
 import com.lms.lms.course.mapper.CourseMapper;
 import com.lms.lms.course.model.CourseInput;
 import com.lms.lms.course.model.CourseParam;
+import com.lms.lms.course.model.TakeCourseInput;
 import com.lms.lms.course.repository.CourseRepository;
+import com.lms.lms.course.repository.TakeCourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -14,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TakeCourseRepository takeCourseRepository;
 
     private LocalDate getLocalDate(String value) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -118,6 +123,31 @@ public class CourseServiceImpl implements CourseService {
             return CourseDto.of(optionalCourse.get());
         }
         return null;
+    }
+
+    @Override
+    public boolean req(TakeCourseInput parameter) {
+
+        Optional<Course> optionalCourse = courseRepository.findById(parameter.getCourseId());
+        if (!optionalCourse.isPresent()){
+            return false;
+        }
+        Course course = optionalCourse.get();
+        //이미 신청정보가 있는지 확인
+        String[] statusList = {TakeCourse.STATUS_REQ,TakeCourse.STATUS_COMPLETE};
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(), parameter.getUserId(), Arrays.asList(statusList));
+        if(count > 0){
+            return false;
+        }
+        TakeCourse takeCourse = TakeCourse.builder()
+                .courseId(course.getId())
+                .userId(parameter.getUserId())
+                .payPrice(course.getPrice())
+                .regDt(LocalDateTime.now())
+                .status(TakeCourse.STATUS_REQ)
+                .build();
+        takeCourseRepository.save(takeCourse);
+        return true;
     }
 
     @Override

@@ -3,18 +3,13 @@ package com.lms.lms.course.controller;
 import com.lms.lms.admin.dto.CategoryDto;
 import com.lms.lms.admin.service.CategoryService;
 import com.lms.lms.course.dto.CourseDto;
-import com.lms.lms.course.model.CourseInput;
 import com.lms.lms.course.model.CourseParam;
 import com.lms.lms.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,6 +39,8 @@ public class CourseController extends BaseController{
 
     @GetMapping("/course/{id}")
     public String courseDetail(Model model, CourseParam parameter){
+
+
 
         CourseDto detail = courseService.frontDetail(parameter.getId());
         model.addAttribute("detail",detail);

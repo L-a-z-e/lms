@@ -3,6 +3,7 @@ package com.lms.lms.course.service;
 import com.lms.lms.course.dto.CourseDto;
 import com.lms.lms.course.model.CourseInput;
 import com.lms.lms.course.model.CourseParam;
+import com.lms.lms.course.model.TakeCourseInput;
 
 import java.util.List;
 
@@ -43,4 +44,11 @@ public interface CourseService {
      * @param id
      */
     CourseDto frontDetail(long id);
+
+    /**
+     * 수강신청
+     * @param parameter
+     * @return
+     */
+    boolean req(TakeCourseInput parameter);
 }
