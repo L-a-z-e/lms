@@ -111,6 +111,16 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public CourseDto frontDetail(long id) {
+
+        Optional<Course> optionalCourse = courseRepository.findById(id);
+        if(optionalCourse.isPresent()){
+            return CourseDto.of(optionalCourse.get());
+        }
+        return null;
+    }
+
+    @Override
     public List<CourseDto> list(CourseParam parameter) {
 
         long totalCount = courseMapper.selectListCount(parameter);
