@@ -36,8 +36,12 @@ public class MemberDto {
 
     String userStatus;
 
-    public static MemberDto of(Member member){
-       return   MemberDto.builder()
+    String zipcode;
+    String addr;
+    String addrDetail;
+
+    public static MemberDto of(Member member) {
+        return MemberDto.builder()
                 .userId(member.getUserId())
                 .userName(member.getUserName())
                 .password(member.getPassword())
@@ -50,9 +54,13 @@ public class MemberDto {
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .adminYn(member.isAdminYn())
                 .userStatus(member.getUserStatus())
+                .zipcode(member.getZipcode())
+                .addr(member.getAddr())
+                .addrDetail(member.getAddrDetail())
                 .build();
     }
-    public String getRegDtText(){
+
+    public String getRegDtText() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss");
         return registerDate != null ? registerDate.format(formatter) : "";
 

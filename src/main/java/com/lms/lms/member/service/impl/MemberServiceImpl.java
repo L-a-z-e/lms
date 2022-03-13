@@ -270,6 +270,9 @@ public class MemberServiceImpl implements MemberService {
             return new ServiceResult(false,"회원정보가 존재하지 않습니다.");
         }
         Member member = optionalMember.get();
+        member.setZipcode(parameter.getZipcode());
+        member.setAddr(parameter.getAddr());
+        member.setAddrDetail(parameter.getAddrDetail());
         member.setPhone(parameter.getPhone());
         memberRepsitory.save(member);
 
