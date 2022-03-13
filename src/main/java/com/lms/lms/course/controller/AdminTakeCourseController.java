@@ -1,5 +1,6 @@
 package com.lms.lms.course.controller;
 
+import com.lms.lms.admin.model.ServiceResult;
 import com.lms.lms.course.dto.TakeCourseDto;
 import com.lms.lms.course.model.TakeCourseParam;
 import com.lms.lms.course.service.TakeCourseService;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -38,6 +40,20 @@ public class AdminTakeCourseController extends BaseController {
 
 
         return "admin/takecourse/list";
+    }
+
+    @PostMapping("/admin/takecourse/status")
+    public String status(Model model, TakeCourseParam parameter) {
+
+        ServiceResult result = takeCourseService.updateStatus(parameter.getId(),parameter.getStatus());
+        if(!result.isResult()){
+            model.addAttribute("message",result.getMessage());
+            return "common/error";
+        }
+
+
+
+        return "redirect:/admin/takecourse/list";
     }
 
 }

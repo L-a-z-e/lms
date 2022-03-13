@@ -20,4 +20,12 @@ public interface TakeCourseService {
      */
     List<TakeCourseDto> list(TakeCourseParam parameter);
 
+    /**
+     * 수강상태 변경
+     * @param id
+     * @param status
+     * @return
+     */
+    ServiceResult updateStatus(long id, String status);
+
 }

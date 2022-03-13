@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,4 +30,10 @@ public class TakeCourseDto {
     //추가 컬럼
     long totalCount;
     long seq;
+
+    public String getRegDtText(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
+        return regDt != null ? regDt.format(formatter) : "";
+
+    }
 }
